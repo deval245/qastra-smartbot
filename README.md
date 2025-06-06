@@ -9,6 +9,20 @@
 Qastra SmartBot is a modern Python-based test automation framework built for scale. It augments traditional test workflows with Machine Learning & GenAI capabilities to ensure test reliability, visual accuracy, and maintainability.
 
 ---
+## 📊 Qastra Streamlit Dashboard (Phase 4)
+
+Visual interface to view:
+- Flaky Test Predictions
+- Visual Validation Image Diffs
+- GenAI-based Locator Healing Logs
+
+### 🔍 Sample View:
+
+![Dashboard Screenshot](docs/assets/dashboard_sample.png)
+
+To run:
+```bash
+streamlit run dashboard/app.py
 
 ## 🚀 Why Qastra SmartBot?
 
@@ -111,4 +125,18 @@ Edit
 mkdir -p docs/assets
 # Place demo screenshots or architecture diagrams here
 
+## 📊 Qastra Streamlit Dashboard (Phase 4)
+
+Visual interface to view:
+- Flaky Test Predictions
+- Visual Validation Image Diffs
+- GenAI-based Locator Healing Logs
+
+### 🔍 Sample View:
+
+![Dashboard Screenshot](docs/assets/dashboard_sample.png)
+
+To run:
+```bash
+streamlit run dashboard/app.py
 

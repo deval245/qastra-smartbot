@@ -36,3 +36,22 @@
 - Pillow, imagehash
 - FuzzyWuzzy, Langchain, etc.
 
+
+---
+
+## ✅ 2. Update `docs/architecture.md` ➕ Phase 4 Summary
+
+Append this to the bottom of `architecture.md`:
+
+```markdown
+---
+
+## 🖥️ Phase 4: Streamlit-Based Dashboard
+
+The Qastra SmartBot Dashboard offers a modern, developer-friendly interface to:
+
+- 📊 View flaky test prediction metrics
+- 🖼️ Visually compare baseline vs captured screenshots
+- 🤖 See GenAI-powered healed locator logs with confidence scores
+
+Built using `streamlit`, it's modular and extendable for further analytics.
