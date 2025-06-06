@@ -1,4 +1,46 @@
+# 1️⃣ Python build artifacts
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# 2️⃣ Virtual environment
+venv/
 .env
+.env.*
+
+# 3️⃣ IDE & Editor folders (PyCharm, VSCode, etc.)
+.idea/
+.vscode/
+*.swp
+
+# 4️⃣ Logs and runtime files
 *.log
+*.csv
+*.out
+*.tmp
+*.db
+*.sqlite
+.DS_Store
+
+# 5️⃣ Streamlit cache
+.streamlit/
+
+# 6️⃣ OS/desktop-specific
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# 7️⃣ Reports (optional — if you generate test reports locally)
 reports/
+coverage/
+htmlcov/
+
+# 8️⃣ Artifacts or screenshots (optional - keep only if pushed deliberately)
+docs/assets/*.png
+!docs/assets/dashboard_sample.png
+
+# 9️⃣ Pipenv or poetry (if used)
+Pipfile.lock
+poetry.lock
