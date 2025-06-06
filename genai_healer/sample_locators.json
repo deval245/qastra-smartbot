@@ -1,0 +1,12 @@
+{
+  "test_login": [
+    "//input[@name='username']",
+    "//input[contains(@placeholder, 'email')]",
+    "//input[@id='user_login']",
+    "//input[@type='text']"
+  ],
+  "test_checkout": [
+    "//button[contains(text(),'Checkout')]",
+    "//button[@class='checkout-btn']"
+  ]
+}
