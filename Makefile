@@ -57,8 +57,13 @@ docker-push:
 # ----------- Git & CI/CD Utilities -----------
 
 # 🔀 Raise PR via GitHub CLI
+.PHONY: gh-pr
 gh-pr:
-	gh pr create --base dev --head ci/github-actions-phase2 --title "🚀 Phase 5: Flaky CLI + Reports" --body "Includes retry engine, validator, CSV reporting, CI support"
+	@test "$(BASE)" != "" || (echo "❌ Please provide BASE branch: make gh-pr BASE=dev HEAD=feature-branch ..." && exit 1)
+	@test "$(HEAD)" != "" || (echo "❌ Please provide HEAD branch: make gh-pr BASE=... HEAD=..." && exit 1)
+	@test "$(TITLE)" != "" || (echo "❌ Please provide TITLE: make gh-pr TITLE='...'" && exit 1)
+	@test "$(BODY)" != "" || (echo "❌ Please provide BODY: make gh-pr BODY='...'" && exit 1)
+	gh pr create --base $(BASE) --head $(HEAD) --title "$(TITLE)" --body "$(BODY)"
 
 # 👀 See GitHub Actions run logs
 ci-log:
@@ -89,5 +94,10 @@ jenkins-run:
 all:
 	make test-ui && make retry && make visual-validate && make report && make dashboard
 
-# 📖 Show available tasks with descriptions	help:
+# 📖 Show available tasks with descriptions
+help:
 	@grep -E '(^[a-zA-Z_-]+:)|(#)' Makefile | awk '{print $$1 "\t" $$2}'
+
+.PHONY: ssh-add
+ssh-add:
+	eval "$$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
