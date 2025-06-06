@@ -1,71 +1,113 @@
-# 🧱 Qastra SmartBot Architecture
+🧱 Qastra SmartBot Architecture
+📍 Phase 1: Flaky Test Predictor
+✅ Uses historical outcomes and simple heuristics to estimate flakiness
 
-## 📍 Phase 1: Flaky Test Predictor
+runner/flake_predictor.py → Flake scoring logic
 
-- Uses historical test outcomes to identify flaky patterns
-- `runner/flake_predictor.py`: scoring logic
-- `runner/test_runner.py`: CLI for execution
-- `runner/retry_engine.py`: retries failed tests with delay logic
+runner/test_runner.py → CLI entrypoint
 
-## 🔍 Phase 2: Visual Validator
+runner/retry_engine.py → Controlled retry logic (max 2 attempts)
 
-- `visual_validator/validator.py`
-- Compares baseline vs. captured screenshots using perceptual hashing
-- Automatically flags UI drifts
+🔍 Phase 2: Visual Validator
+✅ Ensures UI stability with screenshot diffing
 
-## 🧠 Phase 3: GenAI Locator Healer
+visual_validator/validator.py
 
-- `genai_healer/locator_healer.py`
-- Matches broken locator with closest working XPath using fuzzy logic
-- Smart fallback mechanism for resilient tests
+Uses ImageHash for perceptual comparison
 
-## 🔜 Phase 4: Dashboard + Analytics (Coming Soon)
+Highlights mismatches and stores results in structured reports
 
-- Planned: Streamlit dashboard for report visualization
+🧠 Phase 3: GenAI Locator Healer
+✅ Prevents flaky selector issues via LLM
 
-## 🔁 Git Flow
+genai_healer/locator_healer.py
 
-- `main`: production
-- `dev`: integration
-- `feature/*`: individual features
-- `docs/*`: documentation updates
+Auto-heals broken XPath/CSS selectors with confidence scoring
 
-## 👨‍💻 Dependencies
+Supports fallback strategy if GenAI fails
 
-- Python ≥ 3.9
-- Pillow, imagehash
-- FuzzyWuzzy, Langchain, etc.
+🔒 Phase 4: GDPR-Safe Logger
+✅ Ensures no PII leakage in logs
 
+components/logger.py
 
----
+Uses regex-based redaction for:
 
-## ✅ 2. Update `docs/architecture.md` ➕ Phase 4 Summary
+Emails
 
-Append this to the bottom of `architecture.md`:
+SSNs
 
-```markdown
----
+Tokens (Slack, API)
 
-## 🖥️ Phase 4: Streamlit-Based Dashboard
+Credit cards
 
-The Qastra SmartBot Dashboard offers a modern, developer-friendly interface to:
+Each log is labeled as:
 
-- 📊 View flaky test prediction metrics
-- 🖼️ Visually compare baseline vs captured screenshots
-- 🤖 See GenAI-powered healed locator logs with confidence scores
+🔒 [GDPR-SAFE] (if redacted)
 
-Built using `streamlit`, it's modular and extendable for further analytics.
-# 🔎 Qastra SmartBot Automation Suite
+🚨 [UNSAFE] (if untouched)
 
-![CI](https://github.com/deval245/qastra-smartbot/actions/workflows/python-ci.yml/badge.svg)
-🛠️ CI/CD Section (Add under 📦 Features or at bottom)
-markdown
+Sample:
+
+bash
 Copy
 Edit
-## 🔁 CI/CD Integration
+[INFO] 🔒 [GDPR-SAFE] → User email: [REDACTED_EMAIL]
+[WARNING] 🔒 [GDPR-SAFE] → Token: [REDACTED_TOKEN]
+📊 Phase 5: Streamlit Dashboard (WIP)
+Coming soon:
 
-This project uses **GitHub Actions** for continuous integration:
+dashboard/app.py
 
-- ✅ Automatically runs tests on every push & pull request
-- ✅ Ensures code quality and fast feedback
-- ✅ Integrates with modular CLI and dashboard components
+Real-time visualization for:
+
+Flaky predictions
+
+Visual validator outputs
+
+GenAI healing stats
+
+Streamlit-powered, low-code UI
+
+🔁 CI/CD Integration
+✅ GitHub Actions powered pipeline
+
+Automatically triggers on:
+
+PRs
+
+Pushes to main or dev
+
+Runs:
+
+CLI test runner
+
+Flake prediction
+
+Report generation
+
+Future scope:
+
+Deploy dashboard
+
+Slack alert integration
+
+Badge:
+
+
+
+🧬 Git Flow
+Branch	Purpose
+main	Stable, production-ready
+dev	Ongoing development
+feature/*	Individual tasks/features
+docs/*	Markdown and visuals
+
+👨‍💻 Tech Stack & Dependencies
+Category	Libraries
+Core Language	Python ≥ 3.9
+ML/AI	scikit-learn, fuzzywuzzy, langchain
+Visual Validation	Pillow, imagehash
+LLM/GenAI	ollama, openai, streamlit
+Logging	logging, dotenv, regex
+Reporting	pandas, csv

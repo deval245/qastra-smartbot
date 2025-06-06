@@ -105,3 +105,27 @@ ssh-add:
 # 🔐 Secure logger test run
 secure-log-test:
 	python -c "from compliance.secure_logger import SecureLogger; logger=SecureLogger(); logger.info('User email: john@example.com'); logger.error('token=abcd1234supersecret')"
+
+# Load .env if present
+ifneq (,$(wildcard .env))
+    include .env
+    export
+endif
+# 🔐 Test secret loading (manual)
+env-check:
+	set -a && source .env && set +a && \
+	echo "API_KEY: $$API_KEY" && \
+	echo "SLACK_TOKEN: $$SLACK_TOKEN"
+
+
+# 🔐 Run secure logger test
+log-test:
+	python3 -c "from components.logger import secure_log; secure_log('info', 'User email: john.doe@example.com, Token: xoxb-abc123456789'); print('✅ Logged with PII scrubbing')"
+
+
+# ----------- GDPR Compliance Demo -----------
+
+# 🔐 Run GDPR-safe logging sample (with redacted output + explanations)
+gdpr-sample-log:
+	@echo "🔒 Running GDPR-safe log demonstration...\n"
+	python3 gdpr_test.py
