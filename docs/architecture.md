@@ -55,3 +55,17 @@ The Qastra SmartBot Dashboard offers a modern, developer-friendly interface to:
 - 🤖 See GenAI-powered healed locator logs with confidence scores
 
 Built using `streamlit`, it's modular and extendable for further analytics.
+# 🔎 Qastra SmartBot Automation Suite
+
+![CI](https://github.com/deval245/qastra-smartbot/actions/workflows/python-ci.yml/badge.svg)
+🛠️ CI/CD Section (Add under 📦 Features or at bottom)
+markdown
+Copy
+Edit
+## 🔁 CI/CD Integration
+
+This project uses **GitHub Actions** for continuous integration:
+
+- ✅ Automatically runs tests on every push & pull request
+- ✅ Ensures code quality and fast feedback
+- ✅ Integrates with modular CLI and dashboard components
