@@ -3,8 +3,12 @@
 import os
 import sys
 import argparse
-from PIL import Image, ImageChops
+from PIL import Image
 import imagehash
+import pandas as pd
+from datetime import datetime
+
+from components.report_writer import save_report  # ✅ import reporting layer
 
 BASELINE_DIR = "visual_validator/baseline_store"
 CAPTURED_DIR = "visual_validator/captured_screens"
@@ -36,19 +40,30 @@ def main():
     parser.add_argument("--module", required=True, help="Module name to validate (e.g., test_login)")
     args = parser.parse_args()
 
-    baseline_img = os.path.join(BASELINE_DIR, f"{args.module}.png")
-    captured_img = os.path.join(CAPTURED_DIR, f"{args.module}.png")
+    module = args.module
+    baseline_img = os.path.join(BASELINE_DIR, f"{module}.png")
+    captured_img = os.path.join(CAPTURED_DIR, f"{module}.png")
 
-    print(f"[🖼] Comparing images for module: {args.module}")
+    print(f"[🖼] Comparing images for module: {module}")
     print(f"[📂] Baseline: {baseline_img}")
     print(f"[📸] Captured: {captured_img}")
 
     result, distance = compare_images(baseline_img, captured_img)
 
-    if result:
-        print(f"[✅ PASS] Visual match within threshold (distance: {distance})")
-    else:
-        print(f"[❌ FAIL] Visual mismatch detected! (distance: {distance})")
+    status = "PASS" if result else "FAIL"
+    print(f"[{status}] Visual match {'within' if result else 'exceeded'} threshold (distance: {distance})")
+
+    # ✅ Build a report row and save
+    report_df = pd.DataFrame([{
+        "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "module": module,
+        "baseline_path": baseline_img,
+        "captured_path": captured_img,
+        "hash_distance": distance,
+        "status": status
+    }])
+
+    save_report(report_df, "visual")  # ✅ Save to reports/visual/
 
 
 if __name__ == "__main__":
