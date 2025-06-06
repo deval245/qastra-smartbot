@@ -101,3 +101,7 @@ help:
 .PHONY: ssh-add
 ssh-add:
 	eval "$$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
+
+# 🔐 Secure logger test run
+secure-log-test:
+	python -c "from compliance.secure_logger import SecureLogger; logger=SecureLogger(); logger.info('User email: john@example.com'); logger.error('token=abcd1234supersecret')"
