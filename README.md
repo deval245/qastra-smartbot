@@ -144,6 +144,13 @@ docs/architecture.md – Full architecture & phase breakdown
 
 docs/assets/ – Screenshots, diagrams, and flow visuals
 
+### 🕵️ DOM Change Watcher
+
+Monitors changes in DOM structure every X seconds. Stores snapshots and auto-cleans old files.
+
+```bash
+python run_dom_agent.py
+
 📜 License
 This project is licensed under the MIT License – see LICENSE file.
 
