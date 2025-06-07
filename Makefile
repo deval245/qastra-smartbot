@@ -40,18 +40,24 @@ clean:
 
 # ----------- Docker & Deployment -----------
 
-# 🐳 Docker build (for prod/testing usage)
+# 🐳 Build Docker image
 docker-build:
 	docker build -t qastra-smartbot .
 
-# 🚀 Run container locally for Streamlit
-# Ports: 8501 (streamlit), 8080 (jenkins if applicable)
+# 🚀 Run Docker container (FastAPI - port 8000)
 docker-run:
-	docker run -p 8501:8501 qastra-smartbot
+	docker run -p 8000:8000 qastra-smartbot
 
-# 📦 Push docker image to registry (future scope)
+# ✅ Smoke test to validate FastAPI endpoints
+docker-test:
+	curl --fail http://localhost:8000/ || (echo "❌ Root endpoint failed" && exit 1)
+	curl --fail http://localhost:8000/docs || (echo "❌ Swagger UI failed" && exit 1)
+
+# 📦 Push Docker image to DockerHub
 docker-push:
-	docker tag qastra-smartbot <your-dockerhub-username>/qastra:latest && docker push <your-dockerhub-username>/qastra:latest
+	@test "$(DOCKER_USER)" != "" || (echo "❌ Provide DOCKER_USER: make docker-push DOCKER_USER=username" && exit 1)
+	docker tag qastra-smartbot $(DOCKER_USER)/qastra:latest
+	docker push $(DOCKER_USER)/qastra:latest
 
 
 # ----------- Git & CI/CD Utilities -----------
@@ -65,11 +71,11 @@ gh-pr:
 	@test "$(BODY)" != "" || (echo "❌ Please provide BODY: make gh-pr BODY='...'" && exit 1)
 	gh pr create --base $(BASE) --head $(HEAD) --title "$(TITLE)" --body "$(BODY)"
 
-# 👀 See GitHub Actions run logs
+# 👀 View GitHub Actions logs
 ci-log:
 	open https://github.com/deval245/qastra-smartbot/actions
 
-# 🧪 Manual trigger GitHub Actions (via curl - if needed)
+# 🧪 Trigger GitHub Actions manually (example only)
 ci-trigger:
 	curl -X POST -H "Authorization: token $(GITHUB_TOKEN)" \
 		-H "Accept: application/vnd.github.v3+json" \
@@ -79,53 +85,62 @@ ci-trigger:
 
 # ----------- Jenkins (Optional Future Scope) -----------
 
-# 🔧 Jenkins logs & job URL open
+# 🔧 Jenkins job logs
 jenkins-log:
 	open http://localhost:8080/job/qastra-smartbot/
 
-# Trigger job from CLI (authenticated)
+# ▶️ Trigger Jenkins job (CLI)
 jenkins-run:
 	curl -X POST http://localhost:8080/job/qastra-smartbot/build --user admin:<your_api_token>
 
 
 # ----------- Extras & Shortcuts -----------
 
-# 🧭 All-in-one test + report + dashboard run
+# 🧭 End-to-end test & report generation
 all:
 	make test-ui && make retry && make visual-validate && make report && make dashboard
 
-# 📖 Show available tasks with descriptions
+# 🚀 End-to-end Docker setup: build, run, test
+all-docker:
+	make clean && make docker-build && make docker-run && sleep 5 && make docker-test
+
+# 📖 Help menu
 help:
 	@grep -E '(^[a-zA-Z_-]+:)|(#)' Makefile | awk '{print $$1 "\t" $$2}'
 
-.PHONY: ssh-add
-ssh-add:
-	eval "$$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
-
-# 🔐 Secure logger test run
+# 🛡️ Secure logger test
 secure-log-test:
 	python -c "from compliance.secure_logger import SecureLogger; logger=SecureLogger(); logger.info('User email: john@example.com'); logger.error('token=abcd1234supersecret')"
 
-# Load .env if present
+# 🔐 Run secure logger with redaction
+log-test:
+	python3 -c "from components.logger import secure_log; secure_log('info', 'User email: john.doe@example.com, Token: xoxb-abc123456789'); print('✅ Logged with PII scrubbing')"
+
+# 🔐 GDPR-safe logging demo
+gdpr-sample-log:
+	@echo "🔒 Running GDPR-safe log demonstration...\n"
+	python3 gdpr_test.py
+
+# 🔐 Load env vars if .env present
 ifneq (,$(wildcard .env))
     include .env
     export
 endif
-# 🔐 Test secret loading (manual)
+
+# 🔐 Test loading secrets from .env
 env-check:
 	set -a && source .env && set +a && \
 	echo "API_KEY: $$API_KEY" && \
 	echo "SLACK_TOKEN: $$SLACK_TOKEN"
 
+# 🗝️ SSH Agent utility (if needed for git clone/push)
+ssh-add:
+	eval "$$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
 
-# 🔐 Run secure logger test
-log-test:
-	python3 -c "from components.logger import secure_log; secure_log('info', 'User email: john.doe@example.com, Token: xoxb-abc123456789'); print('✅ Logged with PII scrubbing')"
+# 🔮 Train ML flake predictor
+train-ml:
+	python3 ml/train_flake_predictor.py
 
-
-# ----------- GDPR Compliance Demo -----------
-
-# 🔐 Run GDPR-safe logging sample (with redacted output + explanations)
-gdpr-sample-log:
-	@echo "🔒 Running GDPR-safe log demonstration...\n"
-	python3 gdpr_test.py
+# 🧠 Print predicted flake score (for module=...)
+predict-flake:
+	python3 -c "from runner.flake_predictor import predict_flakiness; print('Flake Score:', predict_flakiness('test_login'))"

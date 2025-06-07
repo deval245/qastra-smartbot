@@ -16,8 +16,10 @@ def load_fallback_locators():
         return json.load(file)
 
 
-def heal_locator(failed_locator: str, module: str = "default"):
+def heal_locator(failed_locator: str, module: str = "default", html_snippet: str = None):
     print(f"[🛠️] Attempting to heal locator: {failed_locator}")
+    if html_snippet:
+        print(f"[📄] HTML context provided: {html_snippet[:100]}...")
 
     fallback_data = load_fallback_locators()
     candidates = fallback_data.get(module, [])
