@@ -144,3 +144,6 @@ train-ml:
 # 🧠 Print predicted flake score (for module=...)
 predict-flake:
 	python3 -c "from runner.flake_predictor import predict_flakiness; print('Flake Score:', predict_flakiness('test_login'))"
+dom-watch:
+	python run_dom_agent.py
+
